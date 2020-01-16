@@ -52,6 +52,10 @@ class HibotController extends Controller
                 array(
                     'property' => 'firstname',
                     'value' => $contact['contacts'][0]['fields']['name']
+                ),
+                array(
+                    'property' => 'phone',
+                    'value' => $contact['contacts'][0]['account']
                 )
             )
         );
