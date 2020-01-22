@@ -59,13 +59,8 @@ class HibotController extends Controller
         }
         /** cuando no se tiene ninguna dato del contacto */
         if ($name == '' && $email == ''){
-            $name = 'Integracion - '. $conversations->id;
-            $email = 'integracion'.$conversations->id.'@gmail.com';
-        }
-
-        /** cuando se tiene solo el nombre del contacto */
-        if ($name != '' && $email == ''){
-            $email = 'integracion'.$conversations->id.'@gmail.com';
+            $name = 'Integracion - 1';
+            $email = 'integracion1@gmail.com';
         }
         $arrayHuspot = array(
             'properties'=>array(
