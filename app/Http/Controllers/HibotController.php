@@ -38,24 +38,48 @@ class HibotController extends Controller
         $json = $request;
         $getContent = $request->getContent();
         $array = (array)json_decode($getContent);
-        $item = $array["item"][0];
-        $itemRequest = $item->request;
-        $body = $itemRequest->body->raw;
-        $jsonBody =  json_decode($body, true);
-        $contact = $jsonBody['conversations'][0];
+        $conversations = $array['conversations'][0];
+        $contact = $conversations->contacts[0];
+        $phone = $contact->account;
+        $fields = $contact->fields;
+        $name = '';
+        $email = '';
+        $countFields = count((array)$fields);        
+        /** si existen datos del contacto */
+        if ($countFields > 0) {
+            foreach ((array)$fields as $key => $value) {
+                if ($key == 'name'){
+                    $name = $fields->name;
+                }
+
+                if ($key == 'email'){
+                    $email = $fields->email;
+                }  
+            }
+        }
+        /** cuando no se tiene ninguna dato del contacto */
+        if ($name == '' && $email == ''){
+            $name = 'Integracion - '. $conversations->id;
+            $email = 'integracion'.$conversations->id.'@gmail.com';
+        }
+
+        /** cuando se tiene solo el nombre del contacto */
+        if ($name != '' && $email == ''){
+            $email = 'integracion'.$conversations->id.'@gmail.com';
+        }
         $arrayHuspot = array(
             'properties'=>array(
-                array(
+                array( 
                     'property' => 'email',
-                    'value' => $contact['contacts'][0]['fields']['email']
+                    'value' => $email
                 ),
                 array(
                     'property' => 'firstname',
-                    'value' => $contact['contacts'][0]['fields']['name']
+                    'value' => $name
                 ),
                 array(
                     'property' => 'phone',
-                    'value' => $contact['contacts'][0]['account']
+                    'value' => $phone
                 )
             )
         );
@@ -67,10 +91,10 @@ class HibotController extends Controller
         curl_setopt($ch, CURLOPT_URL, $endpoint);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         $output = curl_exec($ch);
         curl_close($ch);
-        return $output;
+        return $output;        
     }
     /**
      * Display the specified resource.
