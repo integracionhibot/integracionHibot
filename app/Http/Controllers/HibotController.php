@@ -45,18 +45,7 @@ class HibotController extends Controller
         $name = '';
         $email = '';
         $countFields = count((array)$fields);        
-        /** si existen datos del contacto */
-        if ($countFields > 0) {
-            foreach ((array)$fields as $key => $value) {
-                if ($key == 'name'){
-                    $name = $fields->name;
-                }
-
-                if ($key == 'email'){
-                    $email = $fields->email;
-                }  
-            }
-        }
+       
         /** cuando no se tiene ninguna dato del contacto */
         if ($name == '' && $email == ''){
             $name = 'Interesado - 1';
